@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <span v-once>{{ message }}</span>
+        {{ message }}
+        <br>
+        <span v-bind:title="mouseMessage">
+            鼠标悬停几秒钟，查看此处绑定的动态信息
+        </span>
+        <br>
+        <span v-if="seen">现在你看到了我</span>
+        <br>
+        <br>
+        <ol>
+            <li v-for="todo in todoLists">{{ todo.text }}</li>
+        </ol>
+        <button v-on:click="reverseMessage">反转字符串</button>
+        <br>
+        <input type="text" v-model="message">
+        <input type="text" v-model.lazy="message">
+        <input type="number" v-model.number="age">
+        <br>
+        <ol>
+            <todo-item v-for="item in todoLists" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+        <button v-on:click="warn('Form cannot be submitted yet.', $event)">
+            Submit
+        </button>
+    </div>
+    <div id="ask_example">
+        <p>
+            Ask a yes/no question:
+            <input type="text" v-model="question">
+        </p>
+        <p>{{ answer }}</p>
+        <img v-bind:src="url" alt="" srcset="">
+    </div>
+    <div id="example-5">
+        <select v-model="selected">
+            <option disabled value="">请选择</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+        </select>
+        <span>Selected: {{ selected }}</span>
+    </div>
+
+    <div id="appnew">
+        <input ref="startDateInput" v-model="startDate" type="date">
+        <br>
+        <input ref="endDateInput" v-model="endDate" type="date">
+    </div>
+
+
+    <div id="example-4">
+        <button @click="show = !show">
+            Toggle
+        </button>
+        <transition name="custom-classes-transition" v-on:before-enter="beforeEnter" v-on:enter="enter"
+            leave-active-class="animated bounceOutRight">
+            <p v-if="show">
+                Demo
+            </p>
+        </transition>
+    </div>
+
+    <div id="list-demo" class="demo">
+        <button v-on:click="add">Add</button>
+        <button v-on:click="remove">Remove</button>
+        <transition-group name="list" tag="p">
+            <span v-for="item in items" v-bind:key="item" class="list-item">{{ item }}</span>
+        </transition-group>
+    </div>
+</body>
+
+<!-- 因为 AJAX 库和通用工具的生态已经相当丰富，Vue 核心代码没有重复 -->
+<!-- 提供这些功能以保持精简。这也可以让你自由选择自己更熟悉的工具。 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+<!-- <script src="https://unpkg.com/pickaday@1.7.0"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+<script src="https://unpkg.com/vue"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+<script>
+    new Vue({
+        el: '#list-demo',
+        data() {
+            return {
+                items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                nexNum: 10
+            }
+        },
+        methods: {
+            randomIndex: function () {
+                return Math.floor(Math.random() * this.items.length)
+            },
+            add: function () {
+                this.items.splice(this.randomIndex, 0, this.nexNum++)
+            },
+            remove: function () {
+                this.items.splice(this.randomIndex, 1)
+            }
+        },
+    })
+
+    new Vue({
+        el: '#example-4',
+        data() {
+            return {
+                show: false
+            }
+        },
+        methods: {
+            beforeEnter: function (el) {
+                el.style.opacity = 0
+                el.style.transformOrigin = 'left'
+            },
+            enter: function (el, done) {
+                Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+                Velocity(el, { fontSize: '1em' }, { complete: done })
+            },
+            // leave: function (el, done) {
+            // Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+            // Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+            // Velocity(el, {
+            //   rotateZ: '45deg',
+            //   translateY: '30px',
+            //   translateX: '30px',
+            //   opacity: 0
+            // }, { complete: done })
+            // }
+        }
+    })
+
+    new Vue({
+        el: '#appnew',
+        data: {
+            startDate: null,
+            endDate: null,
+        },
+        mounted: function () {
+            this.attPicker('startDateInput')
+            this.attPicker('endDateInput')
+        },
+        methods: {
+            attPicker: function (refName) {
+                var picker = new Pikaday({
+                    field: this.$refs[refName],
+                    // format: 'YYYY-MM-DD'
+                    format: refName == 'startDate' ? 'YYYY-MM-DD' : 'MM/DD YYYY'
+                })
+
+                this.$once('hook:beforeDestroy', function () {
+                    picker.destroy()
+                })
+            }
+        }
+    })
+
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '<li>{{ todo.text }}</li>'
+    })
+
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                message: 'Hello Vue!',
+                age: 10,
+                mouseMessage: '页面加载于' + new Date().toLocaleString(),
+                seen: true,
+                todoLists: [
+                    { text: 'JeffBee', id: 1 },
+                    { text: 'Agenric', id: 2 },
+                    { text: 'Target', id: 3 }
+                ]
+            }
+        },
+        methods: {
+            reverseMessage: function () {
+                this.message = this.message.split(' ').reverse().join(' ')
+            },
+            warn: function (message, event) {
+                // 现在我们可以访问原生事件对象
+                if (event) event.preventDefault()
+                alert(message)
+            }
+        },
+    })
+
+    app.reverseMessage()
+
+    var ask_example = new Vue({
+        el: '#ask_example',
+        data() {
+            return {
+                question: '',
+                url: '',
+                answer: 'I cannot give you an answer until you ask a question!'
+            }
+        },
+        watch: {
+            question: function (newQuestion, oldQuestion) {
+                this.answer = 'Waiting for you to stop typing...'
+                this.debouncedGetAnswer()
+            }
+        },
+        created() {
+            this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+        },
+        methods: {
+            getAnswer: function () {
+                if (this.question.indexOf('?') === -1) {
+                    this.answer = 'Questions usually contain a question mark. ;-)'
+                    return
+                }
+                this.answer = 'Thinking...'
+                var vm = this
+                axios.get('https://yesno.wtf/api').then(function (response) {
+                    vm.answer = _.capitalize(response.data.answer)
+                    vm.url = _.capitalize(response.data.image)
+                }).catch(function (error) {
+                    wm.answer = 'Error! Could not reach the API. ' + error
+                })
+            }
+        },
+    })
+
+    new Vue({
+        el: '#example-5',
+        data: {
+            selected: ''
+        }
+    })
+</script>
+<style type="text/css">
+    .list-item {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .list-enter-active,
+    .list-leave-active {
+        transition: all 1s;
+    }
+
+    .list-enter,
+    .list-leave-to {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+</style>
+
+</html>
