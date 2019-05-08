@@ -28,6 +28,10 @@ export default {
           path: '/learn'
         },
         {
+          title: 'ABai',
+          path: '/abai'
+        },
+        {
           title: 'HelloWord',
           path: '/helloword'
         }

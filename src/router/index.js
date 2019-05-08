@@ -5,6 +5,7 @@ import Home from '../pages/Home'
 import Migrate from '../pages/Migrate'
 import NotFound from '../pages/NotFound'
 import Learn from '../pages/Learn'
+import ABai from '../pages/ABai/Index'
 
 Vue.use(Router)
 
@@ -25,6 +26,11 @@ export default new Router({
       path: '/learn',
       name: 'Learn',
       component: Learn
+    },
+    {
+      path: '/abai',
+      name: 'ABai',
+      component: ABai
     },
     {
       path: '/helloword',
