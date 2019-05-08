@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - "11.13.0"
+
+before_install:
+  - npm install npm@latest -g
+  - npm update -g
+
+install:
+  - npm install
+  - npm run build
+
+script:
+  - /bin/cp -rf dist ../www
+  - /bin/cp -rf CNAME ../www/CNAME
+  - cd ../www
+
+after_success:
+  - git init
+  - git config user.name "Travis-CI"
+  - git config user.email "agenricwon@gmail.com"
+  - git add .
+  - git commit -m "Refresh by Travis CI."
+  - git push "https://${GITHUB_TOKEN}@${GITHUB_REF}" master:master --force
+
+env:
+ global:
+   - GITHUB_REF: github.com/Agenric/LeetCode.git
