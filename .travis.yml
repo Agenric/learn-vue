@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - "11.13.0"
 
+branches:
+only:
+  - learn
+
 before_install:
   - npm install npm@latest -g
   - npm update -g
@@ -25,4 +29,4 @@ after_success:
 
 env:
  global:
-   - GITHUB_REF: github.com/Agenric/LeetCode.git
+   - GITHUB_REF: github.com/Agenric/LearnVue.git
