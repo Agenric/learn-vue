@@ -30,13 +30,13 @@ export default {
       tabBarItems: [
         {
           title: '首页',
-          iconNormal: require('./../../assets/ABai/tabBar/tabBar_index_normal.png'),
-          iconHighlight: require('./../../assets/ABai/tabBar/tabBar_index_highlight.png')
+          iconNormal: require('../../assets/ABai/tabBar/tabBar_index_normal.png'),
+          iconHighlight: require('../../assets/ABai/tabBar/tabBar_index_highlight.png')
         },
         {
           title: '个人中心',
-          iconNormal: require('./../../assets/ABai/tabBar/tabBar_profile_normal.png'),
-          iconHighlight: require('./../../assets/ABai/tabBar/tabBar_profile_highlight.png')
+          iconNormal: require('../../assets/ABai/tabBar/tabBar_profile_normal.png'),
+          iconHighlight: require('../../assets/ABai/tabBar/tabBar_profile_highlight.png')
         }
       ]
     }
