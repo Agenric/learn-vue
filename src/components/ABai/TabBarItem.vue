@@ -1,7 +1,9 @@
 <template>
-  <div class="tab-bar-item">
+  <div
+    class="tab-bar-item"
+    @click="$emit('selectTab', tab)">
     <img :src="selected ? tab.iconHighlight : tab.iconNormal">
-    <span>{{ tab.title }}</span>
+    <span :style="{ color: titleColor }">{{ tab.title }}</span>
   </div>
 </template>
 
@@ -18,11 +20,18 @@ export default {
     return {
       selected: false
     }
+  },
+  computed: {
+    titleColor: function () {
+      return this.selected ? 'rgb(255, 162, 50)' : 'rgb(182, 189, 195)'
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
+@font-yellow: rgb(255, 162, 50);
+@font-grey: rgb(182, 189, 195);
 .tab-bar-item {
   display: flex;
   flex-direction: column;
@@ -30,11 +39,11 @@ export default {
   align-items: center;
   height: inherit;
   img {
-   width: 33px;
-   max-width: 32px;
+   width: 24px;
+   margin-top: 2px;
   }
   span {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 </style>

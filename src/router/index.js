@@ -5,7 +5,7 @@ import Home from '../pages/Home'
 import Migrate from '../pages/Migrate'
 import NotFound from '../pages/NotFound'
 import Learn from '../pages/Learn'
-import ABai from '../pages/ABai/Index'
+import ABai from '../pages/ABai/ABai'
 
 Vue.use(Router)
 
