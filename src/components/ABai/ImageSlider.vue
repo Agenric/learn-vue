@@ -19,13 +19,13 @@
           class="is_direction_left"
           @click="left">
           <img
-            src="../../assets/ABai/imageSlider/imageSlider_left_circle.png"
+            src="../../assets/ABai/imageslider/imageslider_left_circle.png"
             alt=""></li>
         <li
           class="is_direction_right"
           @click="right">
           <img
-            src="../../assets/ABai/imageSlider/imageSlider_right_circle.png"
+            src="../../assets/ABai/imageslider/imageslider_right_circle.png"
             alt="">
         </li>
       </ul>
