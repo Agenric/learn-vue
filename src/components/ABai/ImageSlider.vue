@@ -1,18 +1,24 @@
 <template>
   <div class="is_root">
-    <dir class="is_window">
+    <dir
+      class="is_window">
       <ul
         :style="containerStyle"
-        class="is_container">
+        class="is_container"
+        @mouseover="stop"
+        @mouseout="play">
         <li><img
           :src="images[frontIndex].url"
-          alt=""></li>
+          alt=""
+          @click="clickImage(forntIndex)"></li>
         <li><img
           :src="images[currentIndex].url"
-          alt=""></li>
+          alt=""
+          @click="clickImage(currentIndex)"></li>
         <li><img
           :src="images[backIndex].url"
-          alt=""></li>
+          alt=""
+          @click="clickImage(backIndex)"></li>
       </ul>
       <ul class="is_direction">
         <li
@@ -50,7 +56,8 @@ export default {
   data () {
     return {
       currentIndex: 0,
-      currentOffset: -375
+      currentOffset: -375,
+      transitionEnd: true
     }
   },
   computed: {
@@ -70,7 +77,27 @@ export default {
         : this.currentIndex + 1
     }
   },
+  mounted () {
+    this.init()
+  },
   methods: {
+    init: function () {
+      this.play()
+      window.onblur = function () { this.stop() }.bind(this)
+      window.onfocus = function () { this.play() }.bind(this)
+    },
+    play: function () {
+      if (this.timer) {
+        this.stop()
+      }
+      this.timer = window.setInterval(() => {
+        this.right()
+      }, 3000)
+    },
+    stop: function () {
+      window.clearInterval(this.timer)
+      this.timer = null
+    },
     left: function () {
       this.move(-1, this.frontIndex, true)
     },
@@ -78,20 +105,25 @@ export default {
       this.move(1, this.backIndex, true)
     },
     move: function (direction, to, animation) {
+      if (!this.transitionEnd) return
+      this.transitionEnd = false
       const temp = window.setInterval(() => {
-        console.log(this.currentOffset)
         if (this.currentOffset === 0 || this.currentOffset === -(375 * 2)) {
           window.clearInterval(temp)
           this.currentOffset = -375
           this.currentIndex = to
+          this.transitionEnd = true
         } else {
           if (direction > 0) {
-            this.currentOffset -= 1
+            this.currentOffset -= 5
           } else {
-            this.currentOffset += 1
+            this.currentOffset += 5
           }
         }
-      }, 1)
+      }, 1.5)
+    },
+    clickImage: function (index) {
+      console.log('点击了第', index, '个图片')
     }
   }
 }
@@ -118,7 +150,6 @@ export default {
     .is_container {
       position: absolute;
       display: flex;
-      // transform: translate3d(-375px, 0px, 0px);
       li {
         list-style: none;
         img {
