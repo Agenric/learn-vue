@@ -58,7 +58,7 @@ export default {
 <style lang="less" scoped>
 .abai {
   align-content: center;
-  background-color: cornflowerblue;
+  background-color: rgb(241, 240, 240);
   .content {
     width: inherit;
   }
