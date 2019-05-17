@@ -61,6 +61,7 @@ export default {
   background-color: rgb(241, 240, 240);
   .content {
     width: inherit;
+    padding-bottom: 64px;
   }
   .tab-bar {
     left: 0;

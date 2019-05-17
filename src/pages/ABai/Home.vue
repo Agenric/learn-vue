@@ -170,16 +170,36 @@ export default {
     }
   }
   .h_invite_recharge {
+    background-color: white;
     display: flex;
     flex-wrap: wrap;
+    padding: 0 3%;
     div {
-      background-color: rgba(200, 200, 200, 0.7);
       width: 50%;
       height: 100px;
+      position: relative;
       div {
+        position: absolute;
+        align-items: center;
+        width: 85%;
+        height: 80%;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
         display: flex;
         flex-direction: column;
-        border: 1px solid rgb(247, 38, 48);
+        justify-content: center;
+        border: 1px solid rgb(229, 187, 138);
+        border-radius: 5px;
+        color: rgb(229, 187, 138);
+        .h_ir_recharge {
+          font-weight: 700;
+        }
+        .h_ir_free {
+          font-size: 12px;
+        }
       }
     }
   }
@@ -188,6 +208,7 @@ export default {
     margin-top: 15px;
     height: 150px;
     display: flex;
+    // justify-content: center;
     span {
       margin: auto;
       color: rgb(200, 200, 200)
