@@ -1,12 +1,12 @@
 <template>
   <div class="tab-bar-container">
-    <div class="tab-bar-line"/>
+    <div class="tab-bar-line" />
     <div class="tab-bar">
       <tabBarItem
         v-for="(item, index) in tabs"
         :key="index"
         :tab="item"
-        @selectTab="didSelectTab"/>
+        @selectTab="didSelectTab" />
     </div>
   </div>
 </template>

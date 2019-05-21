@@ -8,7 +8,9 @@
         :key="item.id">
         <button
           class="my-button"
-          @click="item.handle">{{ item.title }}</button>
+          @click="item.handle">
+          {{ item.title }}
+        </button>
       </li>
     </ul>
   </div>

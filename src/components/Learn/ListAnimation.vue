@@ -1,7 +1,11 @@
 <template>
   <div id="list-animation">
-    <button @click="add">Add</button>
-    <button @click="remove">Remove</button>
+    <button @click="add">
+      Add
+    </button>
+    <button @click="remove">
+      Remove
+    </button>
     <transition-group
       name="list"
       tag="p">

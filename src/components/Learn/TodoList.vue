@@ -3,8 +3,8 @@
     <ol>
       <todoItem
         v-for="item in todoLists"
-        :todo="item"
-        :key="item.id" />
+        :key="item.id"
+        :todo="item" />
     </ol>
   </div>
 </template>

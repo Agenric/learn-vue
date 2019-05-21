@@ -4,11 +4,13 @@
       v-for="tab in tabs"
       :key="tab"
       :class="['tab-button', {active: currentTab === tab}]"
-      @click="currentTab = tab">{{ tab }}</button>
+      @click="currentTab = tab">
+      {{ tab }}
+    </button>
     <keep-alive>
       <component
         :is="currentTabComponent"
-        class="tab"/>
+        class="tab" />
     </keep-alive>
   </div>
 </template>

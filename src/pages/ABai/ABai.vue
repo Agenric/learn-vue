@@ -3,12 +3,12 @@
     <keep-alive>
       <component
         :is="currentTabComponent"
-        class="content"/>
+        class="content" />
     </keep-alive>
     <TabBar
       :tabs="tabBarItems"
       class="tab-bar"
-      @didSelectTab="didSelectTab"/>
+      @didSelectTab="didSelectTab" />
   </div>
 </template>
 

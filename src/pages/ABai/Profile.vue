@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="p_u_menu">
-      <simple-menu :raw-data="menuRawData"/>
+      <simple-menu :raw-data="menuRawData" />
     </div>
   </div>
 </template>

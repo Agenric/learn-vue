@@ -4,7 +4,9 @@
       <li
         v-for="item in menu"
         :key="item.id">
-        <router-link :to="item.path">{{ item.title }}</router-link>
+        <router-link :to="item.path">
+          {{ item.title }}
+        </router-link>
       </li>
     </ul>
   </div>

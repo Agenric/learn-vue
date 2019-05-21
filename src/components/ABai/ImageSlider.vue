@@ -7,18 +7,24 @@
         class="is_container"
         @mouseover="stop"
         @mouseout="play">
-        <li><img
-          :src="images[frontIndex].url"
-          alt=""
-          @click="clickImage(forntIndex)"></li>
-        <li><img
-          :src="images[currentIndex].url"
-          alt=""
-          @click="clickImage(currentIndex)"></li>
-        <li><img
-          :src="images[backIndex].url"
-          alt=""
-          @click="clickImage(backIndex)"></li>
+        <li>
+          <img
+            :src="images[frontIndex].url"
+            alt=""
+            @click="clickImage(forntIndex)">
+        </li>
+        <li>
+          <img
+            :src="images[currentIndex].url"
+            alt=""
+            @click="clickImage(currentIndex)">
+        </li>
+        <li>
+          <img
+            :src="images[backIndex].url"
+            alt=""
+            @click="clickImage(backIndex)">
+        </li>
       </ul>
       <ul class="is_direction">
         <li
@@ -26,7 +32,8 @@
           @click="left">
           <img
             src="../../assets/ABai/imageslider/imageslider_left_circle.png"
-            alt=""></li>
+            alt="">
+        </li>
         <li
           class="is_direction_right"
           @click="right">

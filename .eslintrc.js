@@ -32,5 +32,9 @@ module.exports = {
     quotes: ['error', 'single'],
     //强制不使用分号结尾
     semi: ['error', 'never'],
+    'vue/html-closing-bracket-newline': ["error", {
+      "singleline": "never",
+      "multiline": "never"
+    }]
   }
 }
