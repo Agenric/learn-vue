@@ -23,15 +23,13 @@ export default {
   },
   computed: {
     titleColor: function () {
-      return this.selected ? 'rgb(255, 162, 50)' : 'rgb(182, 189, 195)'
+      return this.selected ? '#FCA511' : '#ADB6BD'
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-@font-yellow: rgb(255, 162, 50);
-@font-grey: rgb(182, 189, 195);
 .tab-bar-item {
   display: flex;
   flex-direction: column;
