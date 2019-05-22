@@ -5,7 +5,7 @@
         :is="currentTabComponent"
         class="content" />
     </keep-alive>
-    <TabBar
+    <tab-bar
       :tabs="tabBarItems"
       class="tab-bar"
       @didSelectTab="didSelectTab" />
@@ -19,14 +19,14 @@ import Profile from './Profile'
 
 export default {
   components: {
-    TabBar,
-    Home,
-    Profile
+    'tab-bar': TabBar,
+    'home': Home,
+    'profile': Profile
   },
   data () {
     return {
       currentTab: null,
-      tabItems: ['Home', 'Profile'],
+      tabItems: ['home', 'profile'],
       tabBarItems: [
         {
           title: '首页',

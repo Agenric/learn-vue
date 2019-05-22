@@ -16,7 +16,9 @@
           alt="">
         <span>到店自提</span>
       </div>
-      <div class="h_main_menu_item">
+      <div
+        class="h_main_menu_item"
+        @click="go('Order')">
         <img
           src="../../assets/ABai/home/home_take_out.png"
           alt="">
@@ -100,6 +102,13 @@ export default {
           free: 750
         }
       ]
+    }
+  },
+  methods: {
+    go: function (path) {
+      this.$router.push({
+        name: path
+      })
     }
   }
 }

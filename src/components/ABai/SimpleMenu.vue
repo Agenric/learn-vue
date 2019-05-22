@@ -23,7 +23,7 @@
       <li
         v-for="(child, index) in parent.list"
         :key="child.id"
-        :class="{sm_s_cell_last: (index === parent.list.length - 1) ? false : true}"
+        :class="{sm_s_cell_last: !(index === parent.list.length - 1)}"
         :style="{display: parent.open ? '' : 'none'}"
         class="sm_s_cell">
         <img
@@ -57,6 +57,7 @@ export default {
     padding: 0;
     display: inline;
     li {
+      -webkit-tap-highlight-color: transparent;
       background-color: white;
       height: 50px;
       display: flex;
