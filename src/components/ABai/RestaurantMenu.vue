@@ -160,8 +160,8 @@ export default {
               margin: 0 5px;
             }
             img {
-              width: 30px;
-              height: 30px;
+              width: 25px;
+              height: 25px;
             }
           }
         }
