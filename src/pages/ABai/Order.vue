@@ -29,7 +29,7 @@ export default {
         {
           精品折扣: [
             {
-              name: '商品1',
+              name: '商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1',
               sales: 10,
               praise: 2,
               price: 19.99
@@ -44,7 +44,11 @@ export default {
               name: '商品3',
               sales: 10,
               praise: 2,
-              price: 19.99
+              price: 19.99,
+              spec: [
+                '小份',
+                '大份'
+              ]
             },
             {
               name: '商品4',

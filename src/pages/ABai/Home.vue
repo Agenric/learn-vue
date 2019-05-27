@@ -54,6 +54,7 @@
 
 <script>
 import ImageSlider from '../../components/ABai/ImageSlider'
+import { requestGET } from '../../utils/request'
 
 export default {
   components: {
@@ -62,28 +63,29 @@ export default {
   data () {
     return {
       title: 'Index',
-      images: [
-        {
-          url:
-            'https://img.zcool.cn/community/017973554260cd0000019ae9976589.jpg@1280w_1l_2o_100sh.jpg',
-          target: 'https://www.mobike.com'
-        },
-        {
-          url:
-            'https://img.zcool.cn/community/012b3b554260cd0000019ae9c4ad38.jpg@1280w_1l_2o_100sh.jpg',
-          target: 'https://www.mobike.com'
-        },
-        {
-          url:
-            'https://img.zcool.cn/community/01e49059a53c6aa8012028a95227d5.jpg@1280w_1l_2o_100sh.jpg',
-          target: 'https://www.mobike.com'
-        },
-        {
-          url:
-            'https://img.zcool.cn/community/016a5b5544dee50000019ae9080f86.jpg@1280w_1l_2o_100sh.jpg',
-          target: 'https://www.mobike.com'
-        }
-      ],
+      images: null,
+      // [
+      //   {
+      //     url:
+      //       'https://img.zcool.cn/community/017973554260cd0000019ae9976589.jpg@1280w_1l_2o_100sh.jpg',
+      //     target: 'https://www.mobike.com'
+      //   },
+      //   {
+      //     url:
+      //       'https://img.zcool.cn/community/012b3b554260cd0000019ae9c4ad38.jpg@1280w_1l_2o_100sh.jpg',
+      //     target: 'https://www.mobike.com'
+      //   },
+      //   {
+      //     url:
+      //       'https://img.zcool.cn/community/01e49059a53c6aa8012028a95227d5.jpg@1280w_1l_2o_100sh.jpg',
+      //     target: 'https://www.mobike.com'
+      //   },
+      //   {
+      //     url:
+      //       'https://img.zcool.cn/community/016a5b5544dee50000019ae9080f86.jpg@1280w_1l_2o_100sh.jpg',
+      //     target: 'https://www.mobike.com'
+      //   }
+      // ],
       recharges: [
         {
           recharge: 300,
@@ -103,6 +105,13 @@ export default {
         }
       ]
     }
+  },
+  created () {
+    let that = this
+    requestGET('/home.json', {}, function (data) {
+      console.log(data)
+      that.images = data.images
+    })
   },
   methods: {
     go: function (path) {

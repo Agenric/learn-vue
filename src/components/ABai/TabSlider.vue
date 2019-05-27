@@ -34,6 +34,7 @@ export default {
 
 <style lang="less" scoped>
 .tab_slider_root {
+  position: relative;
   display: flex;
   height: 45px;
   justify-content: space-around;
@@ -56,7 +57,7 @@ export default {
     }
   }
   .ts_selected:before {
-    content: '';
+    content: "";
     position: absolute;
     top: auto;
     bottom: 0;
@@ -66,5 +67,16 @@ export default {
     width: 100%;
     background-color: #fca511;
   }
+}
+.tab_slider_root:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: auto;
+  bottom: 0;
+  right: auto;
+  height: 1px;
+  width: 100%;
+  background-color: #EBECED;
 }
 </style>

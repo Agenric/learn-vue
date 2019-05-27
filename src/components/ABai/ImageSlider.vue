@@ -3,25 +3,26 @@
     <dir
       class="is_window">
       <ul
+        v-if="images && images.length"
         :style="containerStyle"
         class="is_container"
         @mouseover="stop"
         @mouseout="play">
         <li>
           <img
-            :src="images[frontIndex].url"
+            :src="images[frontIndex].img"
             alt=""
             @click="clickImage(forntIndex)">
         </li>
         <li>
           <img
-            :src="images[currentIndex].url"
+            :src="images[currentIndex].img"
             alt=""
             @click="clickImage(currentIndex)">
         </li>
         <li>
           <img
-            :src="images[backIndex].url"
+            :src="images[backIndex].img"
             alt=""
             @click="clickImage(backIndex)">
         </li>
