@@ -38,6 +38,7 @@ export default {
   display: flex;
   height: 45px;
   justify-content: space-around;
+  background-color: white;
   div {
     position: relative;
     display: flex;

@@ -23,17 +23,17 @@
       </div>
     </div>
     <div class="p_u_menu">
-      <simple-menu :raw-data="menuRawData" />
+      <list-menu :raw-data="menuRawData" />
     </div>
   </div>
 </template>
 
 <script>
-import SimpleMenu from '../../components/ABai/SimpleMenu'
+import ListMenu from '../../components/ABai/ListMenu'
 
 export default {
   components: {
-    'simple-menu': SimpleMenu
+    ListMenu
   },
   data () {
     return {

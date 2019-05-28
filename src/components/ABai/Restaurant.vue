@@ -1,48 +1,52 @@
 <template>
-  <div class="res_menu_root">
-    <div class="rm_left">
+  <div class="res_root">
+    <div
+      v-if="categorys != null && categorys.length"
+      class="r_left">
       <span
-        v-for="(parent, index) in menu"
+        v-for="(parent, index) in categorys"
         :key="index"
-        :class="{em_l_selected: index === parentIndex, rm_l_item_divider: index != 0}"
-        class="rm_l_item"
-        @click="parentIndex = index">{{ Object.keys(parent)[0] }}</span>
+        :class="{em_l_selected: index === parentIndex, r_l_item_divider: index != 0}"
+        class="r_l_item"
+        @click="parentIndex = index">{{ parent.name }}</span>
     </div>
-    <div class="rm_right">
+    <div
+      v-if="childCategorys != null && childCategorys.length"
+      class="r_right">
       <div
-        v-for="(child, index) in Object.values(menu[parentIndex])[0]"
+        v-for="(child, index) in childCategorys"
         :key="index"
-        :class="{rm_r_item_divider: index != 0}"
-        class="rm_r_item">
+        :class="{r_r_item_divider: index != 0}"
+        class="r_r_item">
         <div
-          class="rm_r_i_image">
+          class="r_r_i_image">
           <img
-            src="../../assets/logo.png"
+            :src="child.g_img"
             alt="">
         </div>
         <div
-          class="rm_r_i_detail">
-          <span class="rm_r_i_d_title">{{ child.name }}</span>
+          class="r_r_i_detail">
+          <span class="r_r_i_d_title">{{ child.g_name }}</span>
           <br>
-          <span class="rm_r_i_d_info">销量{{ child.sales }} 赞{{ child.praise }}</span>
-          <div class="rm_r_i_d_buy">
-            <span class="rm_r_i_d_b_price">￥{{ child.price }}</span>
+          <span class="r_r_i_d_info">销量{{ child.sale_all_num }} 赞{{ child.like_num }}</span>
+          <div class="r_r_i_d_buy">
+            <span class="r_r_i_d_b_price">￥{{ child.shop_price }}</span>
             <div
-              v-if="child.hasOwnProperty('spec') && child.spec.length > 0"
-              class="rm_r_i_d_b_operate">
-              <img
-                :style="{visibility: true}"
-                src="../../assets/ABai/order/order_minus.png"
-                alt="">
-              <span :style="{visibility: true}"> 0 </span>
-              <img
-                src="../../assets/ABai/order/order_plus.png"
-                alt="">
+              v-if="child.hasOwnProperty('goods_specification') && child.goods_specification instanceof Array && child.goods_specification.length > 0"
+              class="r_r_i_d_b_spec">
+              <span>选择规格</span>
             </div>
             <div
               v-else
-              class="rm_r_i_d_b_spec">
-              <span>选择规格</span>
+              class="r_r_i_d_b_operate">
+              <img
+                :style="{visibility: child.buy_count > 0 ? 'visible' : 'hidden'}"
+                src="../../assets/ABai/order/order_minus.png"
+                alt="">
+              <span :style="{visibility: child.buy_count > 0 ? 'visible' : 'hidden'}"> 0 </span>
+              <img
+                src="../../assets/ABai/order/order_plus.png"
+                alt="">
             </div>
           </div>
         </div>
@@ -54,7 +58,7 @@
 <script>
 export default {
   props: {
-    menu: {
+    categorys: {
       type: Array,
       default: null
     }
@@ -62,6 +66,20 @@ export default {
   data () {
     return {
       parentIndex: 0
+    }
+  },
+  computed: {
+    childCategorys: function () {
+      if (!this.categorys || this.parentIndex >= this.categorys.length) {
+        return null
+      }
+      if (this.categorys[this.parentIndex].child_cate) {
+        this.$parent.rDidSelectCategory(this.categorys[this.parentIndex].id, false)
+        return this.categorys[this.parentIndex].child_cate
+      } else {
+        this.$parent.rDidSelectCategory(this.categorys[this.parentIndex].id, true)
+        return null
+      }
     }
   },
   methods: {
@@ -73,30 +91,33 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.res_menu_root {
-  width: 100%;
-  height: 100%;
-  float: left;
-  .rm_left {
+.res_root {
+  // width: 100%;
+  // height: 100%;
+  // float: left;
+  .r_left {
     display: flex;
     flex-direction: column;
     align-items: center;
     float: left;
-    width: 20%;
+    width: 25%;
     background-color: #F2F3F4;
-    .rm_l_item {
+    .r_l_item {
       position: relative;
       width: 100%;
       height: 40px;
       line-height: 40px;
       font-size: 10px;
       text-align: center;
+      overflow:hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     .em_l_selected {
       background-color: white;
     }
   }
-  .rm_l_item_divider:before {
+  .r_l_item_divider:before {
       content: '';
       position: absolute;
       left: 0;
@@ -107,18 +128,18 @@ export default {
       width: 100%;
       background-color: #EBECED;
     }
-  .rm_right {
+  .r_right {
     display: flex;
     flex-direction: column;
     align-items: center;
     float: right;
-    width: 80%;
+    width: 75%;
     height: 100%;
-    .rm_r_item {
+    .r_r_item {
       position: relative;
       margin-bottom: 10px;
       width: 100%;
-      .rm_r_i_image {
+      .r_r_i_image {
         float: left;
         width: 80px;
         height: 100%;
@@ -128,46 +149,46 @@ export default {
           height: 70px;
         }
       }
-      .rm_r_i_detail {
+      .r_r_i_detail {
         padding: 10px 10px 0 10px;
         height: 100%;
         width: auto;
         overflow: hidden;
-        .rm_r_i_d_title {
+        .r_r_i_d_title {
           font-size: 15px;
         }
-        .rm_r_i_d_info {
-          font-size: 10px;
+        .r_r_i_d_info {
+          font-size: 8px;
           color: #666566;
         }
-        .rm_r_i_d_buy {
+        .r_r_i_d_buy {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          .rm_r_i_d_b_price {
+          .r_r_i_d_b_price {
             color: #FB6C6C;
           }
-          .rm_r_i_d_b_spec {
+          .r_r_i_d_b_spec {
             font-size: 12px;
             padding: 2px 7px;
             border: 1px solid #ADB6BD;
             border-radius: 13px;
           }
-          .rm_r_i_d_b_operate {
+          .r_r_i_d_b_operate {
             display: flex;
             align-items: center;
             span {
               margin: 0 5px;
             }
             img {
-              width: 25px;
-              height: 25px;
+              width: 23px;
+              height: 23px;
             }
           }
         }
       }
     }
-    .rm_r_item_divider:before {
+    .r_r_item_divider:before {
       content: '';
       position: absolute;
       left: 0;

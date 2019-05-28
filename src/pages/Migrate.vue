@@ -13,6 +13,9 @@
         </button>
       </li>
     </ul>
+    <input
+      class="mb_input"
+      type="text">
   </div>
 </template>
 
@@ -72,5 +75,8 @@ export default {
 .my-button {
   background-color: blueviolet;
   font-size: 12px;
+}
+.mb_input {
+  border: 1px solid red;
 }
 </style>

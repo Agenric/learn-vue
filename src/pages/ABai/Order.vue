@@ -1,13 +1,16 @@
 <template>
-  <div class="order">
+  <div class="order_root">
     <div class="o_header">
       <tab-slider
         :items="tabs"
         @tsDidSelectTab="tsDidSelectTab" />
     </div>
-    <div class="o_container">
-      <restaurant-menu :menu="menu" />
-    </div>
+    <!-- <div class="o_container"> -->
+    <restaurant
+      class="o_container"
+      :categorys="dishCategorys"
+      @rDidSelectCategory="rDidSelectCategory" />
+    <!-- </div> -->
 
     <div class="o_footer" />
   </div>
@@ -15,120 +18,85 @@
 
 <script>
 import TabSlider from '../../components/ABai/TabSlider'
-import RestaurantMenu from '../../components/ABai/RestaurantMenu'
+import Restaurant from '../../components/ABai/Restaurant'
+import { requestGET } from '../../utils/request'
 
 export default {
   components: {
-    'tab-slider': TabSlider,
-    'restaurant-menu': RestaurantMenu
+    TabSlider,
+    Restaurant
   },
   data () {
     return {
       tabs: ['外卖', '评价', '店铺'],
-      menu: [
-        {
-          精品折扣: [
-            {
-              name: '商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1商品1',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            },
-            {
-              name: '商品2',
-              sales: 11,
-              praise: 3,
-              price: 9.99
-            },
-            {
-              name: '商品3',
-              sales: 10,
-              praise: 2,
-              price: 19.99,
-              spec: [
-                '小份',
-                '大份'
-              ]
-            },
-            {
-              name: '商品4',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            },
-            {
-              name: '商品5',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            }
-          ]
-        },
-        {
-          最新上架: [
-            {
-              name: '商品11',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            },
-            {
-              name: '商品12',
-              sales: 11,
-              praise: 3,
-              price: 9.99
-            },
-            {
-              name: '商品13',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            },
-            {
-              name: '商品14',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            },
-            {
-              name: '商品15',
-              sales: 10,
-              praise: 2,
-              price: 19.99
-            }
-          ]
-        }
-      ]
+      dishCategorys: null,
+      dishInfo: null,
+      commentList: null,
+      currentCategoryId: 0
     }
+  },
+  mounted () {
+    let that = this
+    requestGET('/restaurant.json', {}, function (data) {
+      that.dishCategorys = data.dish_cate
+      that.dishInfo = data.dish_info
+      that.commentList = data.comment_list
+    })
   },
   methods: {
     tsDidSelectTab: function (tabIndex) {
+      switch (tabIndex) {
+        case 0:
+          break
+        case 1:
+          break
+        case 2:
+          break
+      }
       console.log('选中了' + this.tabs[tabIndex])
+    },
+    rDidSelectCategory: function (categoryId, needRefresh) {
+      let that = this
+      if (needRefresh) {
+        requestGET(`/restaurant/${categoryId}.json`, {}, function (data) {
+          that.dishCategorys.filter(function (obj, idx, array) {
+            return obj.id === categoryId
+          })[0].child_cate = data
+        })
+      }
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.order {
+.order_root {
+  // width: 100%;
+  // height: 100%;
+  // margin: 0;
+  // padding: 0;
+  // align-content: center;
   .o_header {
-    left: 0;
-    // position: fixed;
+    position: fixed;
+    // left: 0;
     top: 0;
     width: 100%;
     z-index: 100;
   }
   .o_contanier {
-    position: absolute;
-    height: 300px;
+    position: relative;
+    top: 45px;
+    padding-top: 45px;
+    padding-bottom: 50px;
+    width: 100%;
+    background-color: aquamarine;
   }
   .o_footer {
-    left: 0;
     position: fixed;
     bottom: 0;
+    height: 50px;
     width: 100%;
     z-index: 100;
-    height: 50px;
     background-color: red;
   }
 }

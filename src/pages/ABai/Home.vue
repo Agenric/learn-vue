@@ -4,25 +4,15 @@
       <ImageSlider :images="images" />
     </div>
     <div class="h_main_menu">
-      <div class="h_main_menu_item">
-        <img
-          src="../../assets/ABai/home/home_calendar.png"
-          alt="">
-        <span>轻食生活</span>
-      </div>
-      <div class="h_main_menu_item">
-        <img
-          src="../../assets/ABai/home/home_to_shop.png"
-          alt="">
-        <span>到店自提</span>
-      </div>
       <div
+        v-for="(channel, index) in channels"
+        :key="index"
         class="h_main_menu_item"
-        @click="go('Order')">
+        @click="go(channel.page)">
         <img
-          src="../../assets/ABai/home/home_take_out.png"
+          :src="channel.img"
           alt="">
-        <span>外卖点餐</span>
+        <span>{{ channel.title }}</span>
       </div>
     </div>
     <div class="h_invite_recharge_title">
@@ -36,11 +26,11 @@
     </div>
     <div class="h_invite_recharge">
       <div
-        v-for="(r, index) in recharges"
+        v-for="(r, index) in rechargeOptions"
         :key="index">
         <div>
-          <span class="h_ir_recharge">￥ {{ r.recharge.toFixed(2) }}</span>
-          <span class="h_ir_free">赠送{{ r.free.toFixed(2) }}元</span>
+          <span class="h_ir_recharge">￥ {{ r.condition }}</span>
+          <span class="h_ir_free">赠送{{ r.money }}元</span>
         </div>
       </div>
     </div>
@@ -62,48 +52,9 @@ export default {
   },
   data () {
     return {
-      title: 'Index',
       images: null,
-      // [
-      //   {
-      //     url:
-      //       'https://img.zcool.cn/community/017973554260cd0000019ae9976589.jpg@1280w_1l_2o_100sh.jpg',
-      //     target: 'https://www.mobike.com'
-      //   },
-      //   {
-      //     url:
-      //       'https://img.zcool.cn/community/012b3b554260cd0000019ae9c4ad38.jpg@1280w_1l_2o_100sh.jpg',
-      //     target: 'https://www.mobike.com'
-      //   },
-      //   {
-      //     url:
-      //       'https://img.zcool.cn/community/01e49059a53c6aa8012028a95227d5.jpg@1280w_1l_2o_100sh.jpg',
-      //     target: 'https://www.mobike.com'
-      //   },
-      //   {
-      //     url:
-      //       'https://img.zcool.cn/community/016a5b5544dee50000019ae9080f86.jpg@1280w_1l_2o_100sh.jpg',
-      //     target: 'https://www.mobike.com'
-      //   }
-      // ],
-      recharges: [
-        {
-          recharge: 300,
-          free: 30
-        },
-        {
-          recharge: 600,
-          free: 90
-        },
-        {
-          recharge: 1000,
-          free: 200
-        },
-        {
-          recharge: 3000,
-          free: 750
-        }
-      ]
+      channels: null,
+      rechargeOptions: null
     }
   },
   created () {
@@ -111,6 +62,8 @@ export default {
     requestGET('/home.json', {}, function (data) {
       console.log(data)
       that.images = data.images
+      that.channels = data.channels
+      that.rechargeOptions = data.rechargeOptions
     })
   },
   methods: {
