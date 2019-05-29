@@ -3,12 +3,14 @@
     <div
       v-if="categorys != null && categorys.length"
       class="r_left">
-      <span
+      <div
         v-for="(parent, index) in categorys"
         :key="index"
         :class="{em_l_selected: index === parentIndex, r_l_item_divider: index != 0}"
         class="r_l_item"
-        @click="parentIndex = index">{{ parent.name }}</span>
+        @click="parentIndex = index">
+        <span>{{ parent.name }}</span>
+      </div>
     </div>
     <div
       v-if="childCategorys != null && childCategorys.length"
@@ -92,26 +94,29 @@ export default {
 
 <style lang="less" scoped>
 .res_root {
-  // width: 100%;
-  // height: 100%;
-  // float: left;
+  height: 100%;
+  position: absolute;
   .r_left {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background-color: #F2F3F4;
     display: flex;
     flex-direction: column;
     align-items: center;
     float: left;
     width: 25%;
-    background-color: #F2F3F4;
+    height: 100%;
     .r_l_item {
-      position: relative;
       width: 100%;
-      height: 40px;
-      line-height: 40px;
-      font-size: 10px;
-      text-align: center;
-      overflow:hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      position: relative;
+      span {
+        padding: 10px;
+        font-size: 12px;
+        text-align: center;
+        display: block;
+        top: 50%;
+      }
     }
     .em_l_selected {
       background-color: white;
@@ -129,6 +134,9 @@ export default {
       background-color: #EBECED;
     }
   .r_right {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -7,7 +7,8 @@
     </div>
     <!-- <div class="o_container"> -->
     <restaurant
-      class="o_container"
+      class="o_contanier"
+      :style="contanierStyle"
       :categorys="dishCategorys"
       @rDidSelectCategory="rDidSelectCategory" />
     <!-- </div> -->
@@ -33,6 +34,13 @@ export default {
       dishInfo: null,
       commentList: null,
       currentCategoryId: 0
+    }
+  },
+  computed: {
+    contanierStyle: function () {
+      return {
+        height: `${window.innerHeight - 95}px`
+      }
     }
   },
   mounted () {
@@ -71,25 +79,16 @@ export default {
 
 <style lang="less" scoped>
 .order_root {
-  // width: 100%;
-  // height: 100%;
-  // margin: 0;
-  // padding: 0;
-  // align-content: center;
   .o_header {
     position: fixed;
-    // left: 0;
     top: 0;
+    height: 45px;
     width: 100%;
     z-index: 100;
   }
   .o_contanier {
-    position: relative;
+    position: absolute;
     top: 45px;
-    padding-top: 45px;
-    padding-bottom: 50px;
-    width: 100%;
-    background-color: aquamarine;
   }
   .o_footer {
     position: fixed;
