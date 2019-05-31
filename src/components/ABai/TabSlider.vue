@@ -5,7 +5,7 @@
       :key="index"
       :class="{ts_selected: index === current}"
       @click="didSelectTab(index)">
-      <span>{{ item }}</span>
+      <span>{{ item.name }}</span>
     </div>
   </div>
 </template>

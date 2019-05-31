@@ -20,14 +20,12 @@
         :key="index"
         :class="{r_r_item_divider: index != 0}"
         class="r_r_item">
-        <div
-          class="r_r_i_image">
+        <div class="r_r_i_image">
           <img
             :src="child.g_img"
             alt="">
         </div>
-        <div
-          class="r_r_i_detail">
+        <div class="r_r_i_detail">
           <span class="r_r_i_d_title">{{ child.g_name }}</span>
           <br>
           <span class="r_r_i_d_info">销量{{ child.sale_all_num }} 赞{{ child.like_num }}</span>
@@ -54,6 +52,7 @@
         </div>
       </div>
     </div>
+    <div class="r_footer" />
   </div>
 </template>
 
@@ -76,10 +75,16 @@ export default {
         return null
       }
       if (this.categorys[this.parentIndex].child_cate) {
-        this.$parent.rDidSelectCategory(this.categorys[this.parentIndex].id, false)
+        this.$parent.rDidSelectCategory(
+          this.categorys[this.parentIndex].id,
+          false
+        )
         return this.categorys[this.parentIndex].child_cate
       } else {
-        this.$parent.rDidSelectCategory(this.categorys[this.parentIndex].id, true)
+        this.$parent.rDidSelectCategory(
+          this.categorys[this.parentIndex].id,
+          true
+        )
         return null
       }
     }
@@ -94,13 +99,14 @@ export default {
 
 <style lang="less" scoped>
 .res_root {
-  height: 100%;
-  position: absolute;
+  // height: 100%;
+  padding-bottom: 50px;
+  // margin-bottom: 50px;
   .r_left {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    background-color: #F2F3F4;
+    background-color: #f2f3f4;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -123,16 +129,16 @@ export default {
     }
   }
   .r_l_item_divider:before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: auto;
-      right: auto;
-      height: 0.5px;
-      width: 100%;
-      background-color: #EBECED;
-    }
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: auto;
+    right: auto;
+    height: 0.5px;
+    width: 100%;
+    background-color: #ebeced;
+  }
   .r_right {
     overflow-y: auto;
     overflow-x: hidden;
@@ -174,12 +180,12 @@ export default {
           justify-content: space-between;
           align-items: center;
           .r_r_i_d_b_price {
-            color: #FB6C6C;
+            color: #fb6c6c;
           }
           .r_r_i_d_b_spec {
             font-size: 12px;
             padding: 2px 7px;
-            border: 1px solid #ADB6BD;
+            border: 1px solid #adb6bd;
             border-radius: 13px;
           }
           .r_r_i_d_b_operate {
@@ -197,7 +203,7 @@ export default {
       }
     }
     .r_r_item_divider:before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 0;
@@ -205,8 +211,16 @@ export default {
       right: auto;
       height: 0.5px;
       width: 100%;
-      background-color: #EBECED;
+      background-color: #ebeced;
     }
+  }
+  .r_footer {
+    position: fixed;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    z-index: 100;
+    background-color: red;
   }
 }
 </style>
