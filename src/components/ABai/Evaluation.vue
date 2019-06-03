@@ -94,6 +94,9 @@ export default {
       .e_c_i_title {
         display: flex;
         justify-content: space-between;
+        .e_c_i_title {
+          flex-wrap: wrap;
+        }
         .e_c_i_t_name {
           font-size: 15px;
           color: #878889;

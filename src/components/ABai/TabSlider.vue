@@ -40,6 +40,8 @@ export default {
   justify-content: space-around;
   background-color: white;
   div {
+    // text-align: center;
+    // width: 33.33%;
     position: relative;
     display: flex;
     flex-direction: column;

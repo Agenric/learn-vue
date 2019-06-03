@@ -7,19 +7,17 @@
     </div>
     <restaurant
       v-if="currentSelectedTabIndex === 0"
-      class="o_contanier"
-      :style="contanierStyle"
       :categorys="dishCategorys"
+      class="o_contanier"
       @rDidSelectCategory="rDidSelectCategory" />
     <evaluation
       v-else-if="currentSelectedTabIndex === 1"
-      :comments="commentList"
-      class="o_contanier"
-      :style="contanierStyle" />
+      :comments="dishComment"
+      class="o_contanier" />
     <store
       v-else-if="currentSelectedTabIndex === 2"
-      class="o_contanier"
-      :style="contanierStyle" />
+      :info="dishInfo"
+      class="o_contanier" />
   </div>
 </template>
 
@@ -56,16 +54,11 @@ export default {
       currentSelectedTabIndex: 0,
       dishCategorys: null,
       dishInfo: null,
-      commentList: null,
+      dishComment: null,
       currentCategoryId: 0
     }
   },
   computed: {
-    contanierStyle: function () {
-      return {
-        height: `${window.innerHeight - 45}px`
-      }
-    },
     currentComponent: function () {
       return this.tabs[this.currentSelectedTabIndex].component
     }
@@ -75,7 +68,9 @@ export default {
     requestGET('/restaurant.json', {}, function (data) {
       that.dishCategorys = data.dish_cate
       that.dishInfo = data.dish_info
-      that.commentList = data.dish_comment
+      that.dishComment = data.dish_comment
+      that.tabs[1].name = '评价(' + data.dish_comment.comment_fenshu + '分)'
+      that.tabs[2].name = data.dish_info.dish_name
     })
   },
   methods: {
@@ -107,9 +102,10 @@ export default {
     z-index: 100;
   }
   .o_contanier {
-    // position: absolute;
-    // top: 45px;
-    margin-top: 45px;
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0px;
   }
   .o_footer {
     position: fixed;
