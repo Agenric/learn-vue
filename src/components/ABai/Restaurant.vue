@@ -34,7 +34,7 @@
             <div
               v-if="child.hasOwnProperty('goods_specification') && child.goods_specification instanceof Array && child.goods_specification.length > 0"
               class="r_r_i_d_b_spec">
-              <span>选择规格</span>
+              <span @click="goodsSpecChoose = child">选择规格</span>
             </div>
             <div
               v-else
@@ -43,12 +43,12 @@
                 :style="{visibility: child.buy_count > 0 ? 'visible' : 'hidden'}"
                 src="../../assets/ABai/order/order_minus.png"
                 alt=""
-                @click="removeFromShopingCart(child)">
+                @click="removeFromShopingCart(child.id, child.cate_c_id)">
               <span :style="{visibility: child.buy_count > 0 ? 'visible' : 'hidden'}"> {{ child.buy_count }} </span>
               <img
                 src="../../assets/ABai/order/order_plus.png"
                 alt=""
-                @click="addToShopingCart(child)">
+                @click="addToShopingCart(child.id, child.cate_c_id)">
             </div>
           </div>
         </div>
@@ -81,12 +81,12 @@
                 <img
                   src="../../assets/ABai/order/order_minus.png"
                   alt=""
-                  @click="removeFromShopingCart(goods)">
+                  @click="removeFromShopingCart(goods.id, goods.cate_c_id)">
                 <span> {{ goods.buy_count }} </span>
                 <img
                   src="../../assets/ABai/order/order_plus.png"
                   alt=""
-                  @click="addToShopingCart(goods)">
+                  @click="addToShopingCart(goods.id, goods.cate_c_id)">
               </div>
             </div>
           </li>
@@ -102,9 +102,9 @@
         <span v-if="shopingCart.length">{{ shopingCart.length }}</span>
       </div>
       <div
-        v-if="shopingCart && shopingCart.length && !showShopingCartDetail"
+        v-if="shopingCart && shopingCart.length && !showShopingCartDetail && totalMoney < 100"
         class="r_sc_recommend">
-        <span>还差23即可免配送费</span>
+        <span>还差{{ 100 - totalMoney }}即可免配送费</span>
       </div>
       <div
         class="r_sc_bottom"
@@ -116,6 +116,48 @@
           v-if="shopingCart.length"
           class="r_sc_b_submit">
           <span>选好了</span>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="goodsSpecChoose && goodsSpecChoose.goods_specification"
+      class="r_choose">
+      <div class="r_c_detail">
+        <div class="r_c_d_title">
+          <span>{{ goodsSpecChoose.g_name }}</span>
+          <img
+            src="../../assets/ABai/order/order_close.png"
+            alt=""
+            @click="goodsSpecChoose = null">
+        </div>
+        <div class="r_c_d_content">
+          <span class="r_c_d_c_left">{{ goodsSpecChoose.goods_specification[0].name }}</span>
+          <div class="r_c_d_c_right">
+            <span
+              v-for="(spec, index) in goodsSpecChoose.goods_specification[0].values"
+              :key="index"
+              class="r_c_d_c_r_item"
+              :class="{r_c_d_c_r_item_selected: goodsSpecChooseSelectedIndex == index}">{{ spec.label }}</span>
+          </div>
+        </div>
+        <div class="r_c_d_bottom">
+          <span class="r_c_d_b_price">￥42</span>
+          <span
+            v-if="goodsSpecChoose.buy_count"
+            class="r_c_d_b_submit">加入购物车</span>
+          <div
+            v-else
+            class="r_c_d_b_operate">
+            <img
+              src="../../assets/ABai/order/order_minus.png"
+              alt=""
+              @click="removeFromShopingCart(goodsSpecChoose)">
+            <span> {{ goodsSpecChoose.buy_count }} </span>
+            <img
+              src="../../assets/ABai/order/order_plus.png"
+              alt=""
+              @click="addToShopingCart(goodsSpecChoose)">
+          </div>
         </div>
       </div>
     </div>
@@ -134,7 +176,8 @@ export default {
     return {
       parentIndex: 0,
       shopingCart: [],
-      showShopingCartDetail: false
+      showShopingCartDetail: false,
+      goodsSpecChoose: null
     }
   },
   computed: {
@@ -147,7 +190,17 @@ export default {
           this.categorys[this.parentIndex].id,
           false
         )
-        return this.categorys[this.parentIndex].child_cate
+        let that = this
+        return this.categorys[this.parentIndex].child_cate.map(function (value, index, array) {
+          var buyCount = 0
+          that.shopingCart.forEach(function (subValue, subIndex, subArray) {
+            if (value.id === subValue.id) {
+              buyCount += subValue.buy_count
+            }
+          })
+          value.buy_count = buyCount
+          return value
+        })
       } else {
         this.$parent.rDidSelectCategory(
           this.categorys[this.parentIndex].id,
@@ -162,23 +215,67 @@ export default {
         total += value.shop_price * value.buy_count
       })
       return total
+    },
+    goodsSpecChooseSelectedIndex: function () {
+      if (this.goodsSpecChoose) {
+        if (this.goodsSpecChoose.goods_specification && this.goodsSpecChoose.goods_specification.length && this.goodsSpecChoose.cate_c_id !== 0) {
+          let i = 0
+          let that = this
+          this.goodsSpecChoose.goods_specification[0].values.every(function (value, index, array) {
+            if (that.goodsSpecChoose.cate_c_id === value.id) {
+              i = index
+              return false
+            }
+          })
+          return i
+        }
+      }
+      return 0
     }
   },
   methods: {
-    addToShopingCart: function (obj) {
-      let goods = this.shopingCart.find(function (v, i, a) {
-        return v.id === obj.id
+    /**
+     * 添加一件商品
+     * @param {string} parentId 父id
+     * @param {string} childId 子id，可能为空
+     */
+    addToShopingCart: function (parentId, childId) {
+      /**
+       * 1、先检查购物车内有无此商品，parentId 和 childId 同时匹配到才算是有
+       * 2、如果已经有此商品，那么直接在购物车中增加此商品的 buy_count
+       * 3、如果购物车内没有此商品，则证明是新增商品，那么这个商品一定在当前的 childCategorys 数组中
+       */
+      let goods = this.shopingCart.find(function (value, index, array) {
+        return value.id === parentId && value.cate_c_id === childId
       })
-      obj.buy_count++
+
       if (!goods) {
-        this.shopingCart.push(obj)
+        var goodsIndex = -1
+        this.childCategorys.every(function (value, index, array) {
+          if (value.id === parentId) {
+            goodsIndex = index
+            return false
+          }
+          return true
+        })
+        goods = this.childCategorys.slice(goodsIndex, goodsIndex + 1)[0]
+        goods.cate_c_id = childId
+        this.shopingCart.push(goods)
       }
+      goods.buy_count++
     },
-    removeFromShopingCart: function (obj) {
-      obj.buy_count--
-      if (obj.buy_count === 0) {
-        this.shopingCart.pop(obj)
-      }
+    removeFromShopingCart: function (parentId, childId) {
+      let that = this
+      this.shopingCart.every(function (value, index, array) {
+        if (value.id === parentId && value.cate_c_id === childId) {
+          value.buy_count--
+          if (value.buy_count === 0) {
+            that.shopingCart.splice(index, 1)
+          }
+          return false
+        }
+        return true
+      })
     },
     randomColor: function () {
       return '#' + Math.floor(Math.random() * 16777215).toString(16)
@@ -310,7 +407,7 @@ export default {
     position: fixed;
     background-color: #666566;
     bottom: 0;
-    opacity: 0.2;
+    opacity: 0.3;
     height: 100%;
     width: 100%;
     z-index: 100;
@@ -468,6 +565,99 @@ export default {
         height: 100%;
         display: flex;
         align-items: center;
+      }
+    }
+  }
+  .r_choose {
+    position: fixed;
+    background-color:rgba(102, 101, 102, 0.5);
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 105;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .r_c_detail {
+      position: absolute;
+      background-color: white;
+      border-radius: 5px;
+      left: 50px;
+      right: 50px;
+      padding: 15px;
+      max-width: 85%;
+      .r_c_d_title {
+        height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span {
+          font-size: 15px;
+        }
+        img {
+          width: 17px;
+          height: 17px;
+        }
+      }
+      .r_c_d_content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px 0;
+        .r_c_d_c_left {
+          width: 85px;
+          align-self: flex-start;
+          font-size: 14px;
+          color: #666566;
+        }
+        .r_c_d_c_right {
+          display: flex;
+          flex-wrap: wrap;
+          .r_c_d_c_r_item {
+            border: 0.5px solid #B1B2B3;
+            color: #B1B2B3;
+          }
+          .r_c_d_c_r_item_selected {
+            border: 0.5px solid #FCA511;
+            color: #FCA511;
+          }
+          span {
+            font-size: 10px;
+            margin: 0 5px 3px 0;
+            border-radius: 13px;
+            padding: 2px 5px;
+          }
+        }
+      }
+      .r_c_d_bottom {
+        height: 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .r_c_d_b_price {
+          color: #fb6c6c;
+        }
+        .r_c_d_b_submit {
+          height: 34px;
+          line-height: 36px;
+          background-color: #FCA511;
+          color: white;
+          border-radius: 8px;
+          font-size: 15px;
+          padding: 0 10px;
+        }
+        .r_c_d_b_operate {
+          display: flex;
+          align-items: center;
+          padding-right: 10px;
+          span {
+            margin: 0 5px;
+          }
+          img {
+            width: 23px;
+            height: 23px;
+          }
+        }
       }
     }
   }

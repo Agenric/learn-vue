@@ -17,7 +17,7 @@
         :key="comment.id"
         class="e_c_item">
         <div class="e_c_i_title">
-          <div class="e_c_i_title">
+          <div class="e_c_i_t_left">
             <span class="e_c_i_t_name">{{ comment.user_nickname }}</span>
             <ul class="e_c_i_t_star">
               <li
@@ -94,7 +94,7 @@ export default {
       .e_c_i_title {
         display: flex;
         justify-content: space-between;
-        .e_c_i_title {
+        .e_c_i_t_left {
           flex-wrap: wrap;
         }
         .e_c_i_t_name {
