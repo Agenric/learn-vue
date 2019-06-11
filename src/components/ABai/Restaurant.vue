@@ -34,7 +34,10 @@
             <div
               v-if="child.hasOwnProperty('goods_specification') && child.goods_specification instanceof Array && child.goods_specification.length > 0"
               class="r_r_i_d_b_spec">
-              <span @click="goodsSpecChoose = child">选择规格</span>
+              <span
+                class="r_r_i_d_b_s_choose"
+                @click="goodsSpecChoose = Object.assign({}, child)">选择规格</span>
+              <span class="r_r_i_d_b_s_count">{{ child.buy_count }}</span>
             </div>
             <div
               v-else
@@ -58,8 +61,7 @@
       v-if="shopingCart && shopingCart.length && showShopingCartDetail"
       class="r_background_cover"
       @click="showShopingCartDetail = !showShopingCartDetail" />
-    <div
-      class="r_shoping_cart">
+    <div class="r_shoping_cart">
       <div
         v-if="shopingCart && shopingCart.length && showShopingCartDetail"
         class="r_sc_detail">
@@ -137,27 +139,29 @@
               v-for="(spec, index) in goodsSpecChoose.goods_specification[0].values"
               :key="index"
               class="r_c_d_c_r_item"
-              :class="{r_c_d_c_r_item_selected: goodsSpecChooseSelectedIndex == index}">{{ spec.label }}</span>
+              :class="{r_c_d_c_r_item_selected: goodsSpecChoose.cate_c_id == spec.id}"
+              @click="goodsSpecChooseChange(spec.id)">{{ spec.label }}</span>
           </div>
         </div>
         <div class="r_c_d_bottom">
-          <span class="r_c_d_b_price">￥42</span>
-          <span
-            v-if="goodsSpecChoose.buy_count"
-            class="r_c_d_b_submit">加入购物车</span>
+          <span class="r_c_d_b_price">{{ goodsSpecChoose.shop_price }}</span>
           <div
-            v-else
+            v-if="goodsSpecChoose.buy_count"
             class="r_c_d_b_operate">
             <img
               src="../../assets/ABai/order/order_minus.png"
               alt=""
-              @click="removeFromShopingCart(goodsSpecChoose)">
+              @click="removeFromShopingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">
             <span> {{ goodsSpecChoose.buy_count }} </span>
             <img
               src="../../assets/ABai/order/order_plus.png"
               alt=""
-              @click="addToShopingCart(goodsSpecChoose)">
+              @click="addToShopingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">
           </div>
+          <span
+            v-else
+            class="r_c_d_b_submit"
+            @click="addToShopingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">加入购物车</span>
         </div>
       </div>
     </div>
@@ -191,7 +195,11 @@ export default {
           false
         )
         let that = this
-        return this.categorys[this.parentIndex].child_cate.map(function (value, index, array) {
+        return this.categorys[this.parentIndex].child_cate.map(function (
+          value,
+          index,
+          array
+        ) {
           var buyCount = 0
           that.shopingCart.forEach(function (subValue, subIndex, subArray) {
             if (value.id === subValue.id) {
@@ -216,21 +224,13 @@ export default {
       })
       return total
     },
-    goodsSpecChooseSelectedIndex: function () {
-      if (this.goodsSpecChoose) {
-        if (this.goodsSpecChoose.goods_specification && this.goodsSpecChoose.goods_specification.length && this.goodsSpecChoose.cate_c_id !== 0) {
-          let i = 0
-          let that = this
-          this.goodsSpecChoose.goods_specification[0].values.every(function (value, index, array) {
-            if (that.goodsSpecChoose.cate_c_id === value.id) {
-              i = index
-              return false
-            }
-          })
-          return i
-        }
-      }
-      return 0
+    currentSelectGoods: function () {
+      return this.goodsSpecChoose
+    }
+  },
+  watch: {
+    goodsSpecChoose: function (value) {
+      this.goodsSpecChooseChange(value.goods_specification[0].values[0].id)
     }
   },
   methods: {
@@ -260,6 +260,21 @@ export default {
         })
         goods = this.childCategorys.slice(goodsIndex, goodsIndex + 1)[0]
         goods.cate_c_id = childId
+        goods.buy_count = 0
+        if (childId !== '0') {
+          goods.goods_specification[0].values.every(function (
+            value,
+            index,
+            array
+          ) {
+            if (value.id === childId) {
+              goods.shop_price = value.price
+              return false
+            } else {
+              return true
+            }
+          })
+        }
         this.shopingCart.push(goods)
       }
       goods.buy_count++
@@ -275,6 +290,38 @@ export default {
           return false
         }
         return true
+      })
+    },
+    goodsSpecChooseChange: function (valueId) {
+      // if (this.goodsSpecChoose.cate_c_id === valueId) {
+      //   return
+      // }
+      this.goodsSpecChoose.cate_c_id = valueId
+      let that = this
+      this.goodsSpecChoose.goods_specification[0].values.every(function (
+        value,
+        index,
+        array
+      ) {
+        if (value.id === that.goodsSpecChoose.cate_c_id) {
+          that.goodsSpecChoose.shop_price = value.price
+          return false
+        } else {
+          return true
+        }
+      })
+
+      this.goodsSpecChoose.buy_count = 0
+      this.shopingCart.every(function (value, index, array) {
+        if (
+          value.id === that.goodsSpecChoose.id &&
+          value.cate_c_id === that.goodsSpecChoose.cate_c_id
+        ) {
+          that.goodsSpecChoose.buy_count = value.buy_count
+          return false
+        } else {
+          return true
+        }
       })
     },
     randomColor: function () {
@@ -372,10 +419,27 @@ export default {
             color: #fb6c6c;
           }
           .r_r_i_d_b_spec {
-            font-size: 12px;
-            padding: 2px 7px;
-            border: 1px solid #adb6bd;
-            border-radius: 13px;
+            position: relative;
+            .r_r_i_d_b_s_choose {
+              padding: 2px 7px;
+              border: 1px solid #adb6bd;
+              border-radius: 13px;
+              font-size: 11px;
+            }
+            .r_r_i_d_b_s_count {
+              position: absolute;
+              top: -5px;
+              right: -5px;
+              font-size: 8px;
+              border-radius: 8px;
+              background-color: #fb6c6c;
+              color: white;
+              padding: 3px;
+              height: 10px;
+              min-width: 10px;
+              line-height: 10px;
+              text-align: center;
+            }
           }
           .r_r_i_d_b_operate {
             display: flex;
@@ -432,12 +496,12 @@ export default {
         }
         span {
           font-size: 15px;
-          color: #FCA511;
+          color: #fca511;
           margin-right: 10px;
         }
       }
       .r_sc_d_title:before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         top: auto;
@@ -445,7 +509,7 @@ export default {
         right: auto;
         height: 1px;
         width: 100%;
-        background-color: #EBECED;
+        background-color: #ebeced;
       }
       ul {
         margin: 0;
@@ -487,24 +551,23 @@ export default {
               }
             }
           }
-
         }
         .r_sc_d_item:before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: auto;
-        bottom: 0;
-        right: auto;
-        height: 0.5px;
-        width: 100%;
-        background-color: #EBECED;
-      }
+          content: "";
+          position: absolute;
+          left: 0;
+          top: auto;
+          bottom: 0;
+          right: auto;
+          height: 0.5px;
+          width: 100%;
+          background-color: #ebeced;
+        }
       }
     }
     .r_sc_icon {
       position: absolute;
-      background-color: #FCA511;
+      background-color: #fca511;
       width: 50px;
       height: 50px;
       left: 10px;
@@ -534,7 +597,7 @@ export default {
       }
     }
     .r_sc_recommend {
-      background-color: #FDE3B9;
+      background-color: #fde3b9;
       height: 28px;
       text-align: center;
       span {
@@ -570,7 +633,7 @@ export default {
   }
   .r_choose {
     position: fixed;
-    background-color:rgba(102, 101, 102, 0.5);
+    background-color: rgba(102, 101, 102, 0.5);
     bottom: 0;
     height: 100%;
     width: 100%;
@@ -614,12 +677,12 @@ export default {
           display: flex;
           flex-wrap: wrap;
           .r_c_d_c_r_item {
-            border: 0.5px solid #B1B2B3;
-            color: #B1B2B3;
+            border: 0.5px solid #b1b2b3;
+            color: #b1b2b3;
           }
           .r_c_d_c_r_item_selected {
-            border: 0.5px solid #FCA511;
-            color: #FCA511;
+            border: 0.5px solid #fca511;
+            color: #fca511;
           }
           span {
             font-size: 10px;
@@ -640,7 +703,7 @@ export default {
         .r_c_d_b_submit {
           height: 34px;
           line-height: 36px;
-          background-color: #FCA511;
+          background-color: #fca511;
           color: white;
           border-radius: 8px;
           font-size: 15px;
