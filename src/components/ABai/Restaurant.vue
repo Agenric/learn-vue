@@ -46,81 +46,90 @@
                 :style="{visibility: child.buy_count > 0 ? 'visible' : 'hidden'}"
                 src="../../assets/ABai/order/order_minus.png"
                 alt=""
-                @click="removeFromShopingCart(child.id, child.cate_c_id)">
+                @click="removeFromshoppingCart(child.id, child.cate_c_id)">
               <span :style="{visibility: child.buy_count > 0 ? 'visible' : 'hidden'}"> {{ child.buy_count }} </span>
               <img
                 src="../../assets/ABai/order/order_plus.png"
                 alt=""
-                @click="addToShopingCart(child.id, child.cate_c_id)">
+                @click="addToshoppingCart(child.id, child.cate_c_id)">
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- 购物车详情 -->
     <div
-      v-if="shopingCart && shopingCart.length && showShopingCartDetail"
+      v-if="shoppingCart && shoppingCart.length && showshoppingCartDetail"
       class="r_background_cover"
-      @click="showShopingCartDetail = !showShopingCartDetail" />
+      @click="showshoppingCartDetail = !showshoppingCartDetail" />
     <div class="r_shoping_cart">
       <div
-        v-if="shopingCart && shopingCart.length && showShopingCartDetail"
+        v-if="shoppingCart && shoppingCart.length && showshoppingCartDetail"
         class="r_sc_detail">
         <div class="r_sc_d_title">
           <img
             src="../../assets/ABai/order/order_trash.png"
             alt="">
-          <span>清空购物车</span>
+          <span @click="shoppingCart = []">清空购物车</span>
         </div>
         <ul>
           <li
-            v-for="(goods, index) in shopingCart"
+            v-for="(goods, index) in shoppingCart"
             :key="index"
             class="r_sc_d_item">
-            <span class="r_sc_d_i_goods_name">{{ goods.g_name }}</span>
+            <div class="r_sc_d_i_goods_name">
+              <span class="r_sc_d_i_gn_main">{{ goods.g_name }}</span>
+              <span
+                v-if="goods.cate_c_id !== '0'"
+                class="r_sc_d_i_gn_sub">{{ goods.goods_specification[0].values.find(function (value) { return value.id === goods.cate_c_id }).label }}</span>
+            </div>
             <div class="r_sc_d_i_goods_detail">
               <span class="r_sc_d_i_gd_price">￥{{ goods.shop_price }}</span>
               <div class="r_sc_d_i_gd_operate">
                 <img
                   src="../../assets/ABai/order/order_minus.png"
                   alt=""
-                  @click="removeFromShopingCart(goods.id, goods.cate_c_id)">
+                  @click="removeFromshoppingCart(goods.id, goods.cate_c_id)">
                 <span> {{ goods.buy_count }} </span>
                 <img
                   src="../../assets/ABai/order/order_plus.png"
                   alt=""
-                  @click="addToShopingCart(goods.id, goods.cate_c_id)">
+                  @click="addToshoppingCart(goods.id, goods.cate_c_id)">
               </div>
             </div>
           </li>
         </ul>
       </div>
+      <!-- 减免配送费提示 -->
       <div
         class="r_sc_icon"
-        :style="{'background-color': shopingCart.length ? '#FCA511' : '#666566'}"
-        @click="showShopingCartDetail = !showShopingCartDetail">
+        :style="{'background-color': shoppingCart.length ? '#FCA511' : '#666566'}"
+        @click="showshoppingCartDetail = !showshoppingCartDetail">
         <img
           src="../../assets/ABai/order/order_shoping_car.png"
           alt="">
-        <span v-if="shopingCart.length">{{ shopingCart.length }}</span>
+        <span v-if="shoppingCart.length">{{ totalCount }}</span>
       </div>
+      <!-- 购物车总数目、金额、付款 -->
       <div
-        v-if="shopingCart && shopingCart.length && !showShopingCartDetail && totalMoney < 100"
+        v-if="shoppingCart && shoppingCart.length && !showshoppingCartDetail && totalMoney < 100"
         class="r_sc_recommend">
         <span>还差{{ 100 - totalMoney }}即可免配送费</span>
       </div>
       <div
         class="r_sc_bottom"
-        :style="{'background-color': (shopingCart && shopingCart.length) ? 'white' : '#323334'}">
+        :style="{'background-color': (shoppingCart && shoppingCart.length) ? 'white' : '#323334'}">
         <div class="r_sc_b_total">
-          <span :style="{'color': (shopingCart && shopingCart.length) ? '#fb6c6c' : 'white'}">{{ shopingCart.length ? '￥' + totalMoney : '购物车是空的' }}</span>
+          <span :style="{'color': (shoppingCart && shoppingCart.length) ? '#fb6c6c' : 'white'}">{{ shoppingCart.length ? '￥' + totalMoney : '购物车是空的' }}</span>
         </div>
         <div
-          v-if="shopingCart.length"
+          v-if="shoppingCart.length"
           class="r_sc_b_submit">
           <span>选好了</span>
         </div>
       </div>
     </div>
+    <!-- 弹窗选择具体规格 -->
     <div
       v-if="goodsSpecChoose && goodsSpecChoose.goods_specification"
       class="r_choose">
@@ -151,17 +160,17 @@
             <img
               src="../../assets/ABai/order/order_minus.png"
               alt=""
-              @click="removeFromShopingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">
+              @click="removeFromshoppingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">
             <span> {{ goodsSpecChoose.buy_count }} </span>
             <img
               src="../../assets/ABai/order/order_plus.png"
               alt=""
-              @click="addToShopingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">
+              @click="addToshoppingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">
           </div>
           <span
             v-else
             class="r_c_d_b_submit"
-            @click="addToShopingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">加入购物车</span>
+            @click="addToshoppingCart(goodsSpecChoose.id, goodsSpecChoose.cate_c_id), goodsSpecChooseChange(goodsSpecChoose.cate_c_id)">加入购物车</span>
         </div>
       </div>
     </div>
@@ -179,8 +188,8 @@ export default {
   data () {
     return {
       parentIndex: 0,
-      shopingCart: [],
-      showShopingCartDetail: false,
+      shoppingCart: [],
+      showshoppingCartDetail: false,
       goodsSpecChoose: null
     }
   },
@@ -201,7 +210,7 @@ export default {
           array
         ) {
           var buyCount = 0
-          that.shopingCart.forEach(function (subValue, subIndex, subArray) {
+          that.shoppingCart.forEach(function (subValue, subIndex, subArray) {
             if (value.id === subValue.id) {
               buyCount += subValue.buy_count
             }
@@ -217,20 +226,31 @@ export default {
         return null
       }
     },
-    totalMoney: function () {
+    totalCount: function () {
       var total = 0
-      this.shopingCart.forEach(function (value, index, array) {
-        total += value.shop_price * value.buy_count
+      this.shoppingCart.forEach(function (value, index, array) {
+        total += value.buy_count
       })
       return total
     },
-    currentSelectGoods: function () {
-      return this.goodsSpecChoose
+    totalMoney: function () {
+      var total = 0
+      this.shoppingCart.forEach(function (value, index, array) {
+        total += value.shop_price * value.buy_count
+      })
+      return total
     }
   },
   watch: {
     goodsSpecChoose: function (value) {
-      this.goodsSpecChooseChange(value.goods_specification[0].values[0].id)
+      if (value) {
+        this.goodsSpecChooseChange(value.goods_specification[0].values[0].id)
+      }
+    },
+    shoppingCart: function (value) {
+      if (!value.length) {
+        this.showshoppingCartDetail = false
+      }
     }
   },
   methods: {
@@ -239,13 +259,13 @@ export default {
      * @param {string} parentId 父id
      * @param {string} childId 子id，可能为空
      */
-    addToShopingCart: function (parentId, childId) {
+    addToshoppingCart: function (parentId, childId) {
       /**
        * 1、先检查购物车内有无此商品，parentId 和 childId 同时匹配到才算是有
        * 2、如果已经有此商品，那么直接在购物车中增加此商品的 buy_count
        * 3、如果购物车内没有此商品，则证明是新增商品，那么这个商品一定在当前的 childCategorys 数组中
        */
-      let goods = this.shopingCart.find(function (value, index, array) {
+      let goods = this.shoppingCart.find(function (value, index, array) {
         return value.id === parentId && value.cate_c_id === childId
       })
 
@@ -258,7 +278,7 @@ export default {
           }
           return true
         })
-        goods = this.childCategorys.slice(goodsIndex, goodsIndex + 1)[0]
+        goods = Object.assign({}, this.childCategorys.slice(goodsIndex, goodsIndex + 1)[0])
         goods.cate_c_id = childId
         goods.buy_count = 0
         if (childId !== '0') {
@@ -275,17 +295,17 @@ export default {
             }
           })
         }
-        this.shopingCart.push(goods)
+        this.shoppingCart.push(goods)
       }
       goods.buy_count++
     },
-    removeFromShopingCart: function (parentId, childId) {
+    removeFromshoppingCart: function (parentId, childId) {
       let that = this
-      this.shopingCart.every(function (value, index, array) {
+      this.shoppingCart.every(function (value, index, array) {
         if (value.id === parentId && value.cate_c_id === childId) {
           value.buy_count--
           if (value.buy_count === 0) {
-            that.shopingCart.splice(index, 1)
+            that.shoppingCart.splice(index, 1)
           }
           return false
         }
@@ -293,9 +313,6 @@ export default {
       })
     },
     goodsSpecChooseChange: function (valueId) {
-      // if (this.goodsSpecChoose.cate_c_id === valueId) {
-      //   return
-      // }
       this.goodsSpecChoose.cate_c_id = valueId
       let that = this
       this.goodsSpecChoose.goods_specification[0].values.every(function (
@@ -312,7 +329,7 @@ export default {
       })
 
       this.goodsSpecChoose.buy_count = 0
-      this.shopingCart.every(function (value, index, array) {
+      this.shoppingCart.every(function (value, index, array) {
         if (
           value.id === that.goodsSpecChoose.id &&
           value.cate_c_id === that.goodsSpecChoose.cate_c_id
@@ -387,7 +404,6 @@ export default {
     bottom: 50px;
     .r_r_item {
       position: relative;
-      margin-bottom: 10px;
       width: 100%;
       .r_r_i_image {
         float: left;
@@ -400,7 +416,7 @@ export default {
         }
       }
       .r_r_i_detail {
-        padding: 10px 10px 0 10px;
+        padding: 10px;
         height: 100%;
         width: auto;
         overflow: hidden;
@@ -515,24 +531,35 @@ export default {
         margin: 0;
         padding: 0;
         list-style: none;
-        list-style: none;
         max-height: 250px;
         overflow-y: auto;
         overflow-x: hidden;
         .r_sc_d_item {
           position: relative;
+          border:1px solid transparent;
           display: flex;
           align-items: center;
-          height: 50px;
+          padding: 8px 0;
           .r_sc_d_i_goods_name {
-            width: 45%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            padding-left: 10px;
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            span {
+              margin-left: 10px;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+            .r_sc_d_i_gn_main {
+              font-size: 14px;
+            }
+            .r_sc_d_i_gn_sub {
+              color: #666566;
+              font-size: 10px;
+            }
           }
           .r_sc_d_i_goods_detail {
-            width: 55%;
+            width: 45%;
             display: flex;
             justify-content: space-between;
             .r_sc_d_i_gd_price {
@@ -557,9 +584,9 @@ export default {
           position: absolute;
           left: 0;
           top: auto;
-          bottom: 0;
+          bottom: 0px;
           right: auto;
-          height: 0.5px;
+          height: 1px;
           width: 100%;
           background-color: #ebeced;
         }

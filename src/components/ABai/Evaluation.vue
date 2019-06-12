@@ -95,30 +95,32 @@ export default {
         display: flex;
         justify-content: space-between;
         .e_c_i_t_left {
+          display: flex;
           flex-wrap: wrap;
-        }
-        .e_c_i_t_name {
-          font-size: 15px;
-          color: #878889;
-        }
-        .e_c_i_t_star {
-          list-style: none;
-          padding: 0 0 0 5px;
-          margin: 0;
-          .e_c_i_t_s_item {
-            padding: 0;
-            float: left;
-            img {
+          .e_c_i_t_name {
+            font-size: 15px;
+            color: #878889;
+          }
+          .e_c_i_t_star {
+            list-style: none;
+            padding: 0 0 0 5px;
+            margin: 0;
+            .e_c_i_t_s_item {
               padding: 0;
-              margin: 0;
-              width: 18px;
-              height: 18px;
+              float: left;
+              img {
+                padding: 0;
+                margin: 0;
+                width: 18px;
+                height: 18px;
+              }
             }
           }
         }
         .e_c_i_t_date {
           font-size: 15px;
           color: #878889;
+          white-space: nowrap;
         }
       }
       .e_c_i_detail {
