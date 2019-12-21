@@ -612,7 +612,8 @@ export default {
         text-align: center;
         top: 0;
         right: -10px;
-        width: 20px;
+        padding-left: 5.5px;
+        padding-right: 5.5px;
         height: 20px;
         border-radius: 10px;
         background-color: #fb6c6c;
@@ -620,7 +621,7 @@ export default {
         box-sizing: border-box;
         font-size: 12px;
         color: #f2f3f4;
-        line-height: 20px;
+        line-height: px;
       }
     }
     .r_sc_recommend {
