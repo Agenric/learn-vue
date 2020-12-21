@@ -60,7 +60,7 @@
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.6.0",
     "nightwatch": "^1.1.9",
-    "node-notifier": "^5.1.2",
+    "node-notifier": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",
